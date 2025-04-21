@@ -31,10 +31,11 @@ describe HelperUserInfoService do
 
     it "includes purchases in value calculation" do
       create(:purchase, purchaser: user, price_cents: 1000)
+      create(:purchase, purchaser: user, price_cents: 1500)
       index_model_records(Purchase)
-      allow_any_instance_of(User).to receive(:sales_cents_total).and_return(2250)
+      allow_any_instance_of(User).to receive(:sales_cents_total).and_return(2500)
       result = service.user_info
-      expect(result[:metadata][:value]).to eq(3250)
+      expect(result[:metadata][:value]).to eq(2500)
     end
 
     context "when user is not found" do
