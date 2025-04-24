@@ -38,6 +38,15 @@ describe HelperUserInfoService do
       expect(result[:metadata][:value]).to eq(2500)
     end
 
+    it "returns max of lifetime sales and 28-day purchases" do
+      allow_any_instance_of(User).to receive(:sales_cents_total).and_return(2000) # lifetime
+      allow(service).to receive(:purchases_cents_total).and_return(3000) # 28-day
+
+      result = service.user_info
+
+      expect(result[:metadata][:value]).to eq(3000) # max of 2000 and 3000
+    end
+
     context "when user is not found" do
       let(:service) { described_class.new(email: "inexistent@example.com") }
 
